@@ -4,6 +4,7 @@ import SpringBootShop.project.controller.UserForm;
 import SpringBootShop.project.domain.User;
 import SpringBootShop.project.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,18 +12,23 @@ import java.util.List;
 @Service
 @Transactional
 public class UserService {
+    private final PasswordEncoder passwordEncoder;
     private UserRepository repository;
     private User loginUser = null;
 
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // 회원 가입 - save() 사용
     public User singUp(String id, String pw) {
         checkId(id);
         checkPw(pw);
-        User user = new User(id, pw);
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(pw);
+        User user = new User(id, encodedPassword);
+
         return repository.save(user);
     }
 
@@ -52,7 +58,7 @@ public class UserService {
     public User login(String id, String pw) {
         User user = repository.findByUserId(id).
                 orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다"));
-        if (!user.getUserPw().equals(pw)) {
+        if (!passwordEncoder.matches(pw, user.getUserPw())) {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다");
         }
         loginUser = user;
@@ -82,8 +88,8 @@ public class UserService {
     // 비밀번호 변경
     public User updatePw(String id, UserForm form) {
         User user = findByUserId(id);
-
-        user.setUserPw(form.getUserPw());
+        // 비밀번호 암호화 추가
+        user.setUserPw(passwordEncoder.encode(form.getUserPw()));
         return user;
     }
 }
