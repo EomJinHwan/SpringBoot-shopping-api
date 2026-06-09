@@ -1,6 +1,7 @@
 package SpringBootShop.project.controller;
 
 import SpringBootShop.project.domain.Product;
+import SpringBootShop.project.dto.product.ProductForm;
 import SpringBootShop.project.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

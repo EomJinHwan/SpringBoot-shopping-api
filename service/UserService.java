@@ -1,8 +1,10 @@
 package SpringBootShop.project.service;
 
-import SpringBootShop.project.controller.UserForm;
 import SpringBootShop.project.domain.User;
+import SpringBootShop.project.dto.user.LoginResponse;
+import SpringBootShop.project.dto.user.UserForm;
 import SpringBootShop.project.repository.UserRepository;
+import SpringBootShop.project.security.jwt.JwtTokenProvider;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,11 +16,13 @@ import java.util.List;
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private UserRepository repository;
+    private JwtTokenProvider jwtTokenProvider;
     private User loginUser = null;
 
-    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     // 회원 가입 - save() 사용
@@ -55,14 +59,15 @@ public class UserService {
     }
 
     // 로그인
-    public User login(String id, String pw) {
+    public LoginResponse login(String id, String pw) {
         User user = repository.findByUserId(id).
                 orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다"));
         if (!passwordEncoder.matches(pw, user.getUserPw())) {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다");
         }
         loginUser = user;
-        return user;
+        String accessToken = jwtTokenProvider.createAccessToken(id);
+        return new LoginResponse("Bearer", accessToken);
     }
 
     // 로그 아웃

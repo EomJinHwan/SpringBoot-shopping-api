@@ -1,7 +1,7 @@
 package SpringBootShop.project.service;
 
-import SpringBootShop.project.controller.ProductForm;
 import SpringBootShop.project.domain.Product;
+import SpringBootShop.project.dto.product.ProductForm;
 import SpringBootShop.project.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

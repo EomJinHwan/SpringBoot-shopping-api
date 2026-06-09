@@ -1,6 +1,8 @@
 package SpringBootShop.project.controller;
 
 import SpringBootShop.project.domain.User;
+import SpringBootShop.project.dto.user.LoginResponse;
+import SpringBootShop.project.dto.user.UserForm;
 import SpringBootShop.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +34,7 @@ public class UserController {
      */
     @PostMapping("/login")
     @ResponseBody()
-    public User login(@RequestBody UserForm form) {
+    public LoginResponse login(@RequestBody UserForm form) {
         return userService.login(form.getUserId(), form.getUserPw());
     }
 
