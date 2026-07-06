@@ -17,7 +17,6 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private UserRepository repository;
     private JwtTokenProvider jwtTokenProvider;
-    private User loginUser = null;
 
     public UserService(UserRepository repository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.repository = repository;
@@ -65,19 +64,12 @@ public class UserService {
         if (!passwordEncoder.matches(pw, user.getUserPw())) {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다");
         }
-        loginUser = user;
-        String accessToken = jwtTokenProvider.createAccessToken(id);
+        String accessToken = jwtTokenProvider.createAccessToken(
+                user.getUserId(),
+                user.getRole());
         return new LoginResponse("Bearer", accessToken);
     }
 
-    // 로그 아웃
-    public User logout() {
-        if (loginUser == null) {
-            throw new IllegalArgumentException("로그인 상태가 아닙니다");
-        }
-        loginUser = null;
-        return null;
-    }
 
     // 유저 정보 가져오기 - id - findByUserId로 변경
     public User findByUserId(String id) {

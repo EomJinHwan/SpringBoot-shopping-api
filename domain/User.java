@@ -11,6 +11,7 @@ public class User {
 
     private String userId;
     private String userPw;
+    private String role;
 
     // JPA 기본 생성자
     protected User() {
@@ -19,6 +20,7 @@ public class User {
     public User(String userId, String userPw) {
         this.userId = userId;
         this.userPw = userPw;
+        this.role = "ROLE_USER";
     }
 
     public String getUserId() {
@@ -31,5 +33,9 @@ public class User {
 
     public void setUserPw(String userPw) {
         this.userPw = userPw;
+    }
+
+    public String getRole() {
+        return role;
     }
 }

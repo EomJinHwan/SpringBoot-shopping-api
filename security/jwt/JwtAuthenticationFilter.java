@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -29,9 +30,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // 토큰에서 userId 추출
             String userId = jwtTokenProvider.getUserId(token);
 
+            // 토큰에서 role 꺼내기
+            String role = jwtTokenProvider.getRole(token);
+
+            // Spring Security가 이해할 수 있는 권한 객체로 변환
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+
             // Authentication 객체 생성
             UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+                    new UsernamePasswordAuthenticationToken(userId,
+                            null,
+                            Collections.singleton(authority));
 
             // SecurityContext에 인증 정보 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);

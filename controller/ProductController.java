@@ -22,7 +22,7 @@ public class ProductController {
     /**
      * 상품 등록
      */
-    @PostMapping("/products")
+    @PostMapping("/api/products")
     @ResponseBody
     public Product create(@RequestBody ProductForm form) {
         Product product = new Product(form.getProductName(), form.getPrice(), form.getStock());
@@ -32,7 +32,7 @@ public class ProductController {
     /**
      * 전체 사품 조회
      */
-    @GetMapping("/products")
+    @GetMapping("/api/products")
     @ResponseBody
     public List<Product> findAll() {
         return productService.findAll();
@@ -41,16 +41,17 @@ public class ProductController {
     /**
      * id로 상품 조회
      */
-    @GetMapping("/products/{id}")
+    @GetMapping("/api/products/{id}")
     @ResponseBody
     public Product findById(@PathVariable Long id) {
+
         return productService.findById(id);
     }
 
     /**
      * 이름으로 상품 조회
      */
-    @GetMapping("/products/search")
+    @GetMapping("/api/products/search")
     @ResponseBody
     public Product findByName(@RequestParam String name) {
         return productService.findByName(name);
@@ -59,7 +60,7 @@ public class ProductController {
     /**
      * 상품 삭제
      */
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/api/products/{id}")
     @ResponseBody
     public String deleteById(@PathVariable Long id) {
         productService.deleteById(id);
@@ -69,7 +70,7 @@ public class ProductController {
     /**
      * 상품 정보 수정
      */
-    @PutMapping("/products/{id}")
+    @PutMapping("/api/products/{id}")
     @ResponseBody
     public String update(@PathVariable Long id, @RequestBody ProductForm form) {
         productService.update(id, form);

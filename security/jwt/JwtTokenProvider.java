@@ -29,13 +29,14 @@ public class JwtTokenProvider {
     }
 
     // Access 토큰 생성
-    public String createAccessToken(String userId) {
+    public String createAccessToken(String userId, String role) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + accessTokenValidity);
 
         return Jwts.builder()
                 // Payload
                 .subject(userId)    // 토큰 주인(주제) 설정
+                .claim("role", role)
                 .issuedAt(now)      // 발급 시간 설정
                 .expiration(expiration) // 만료시간 설정
                 // 서명
@@ -67,5 +68,15 @@ public class JwtTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload()
                 .getSubject();
+    }
+
+    // 토큰에서 권한 꺼내오기
+    public String getRole(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("role", String.class);
     }
 }
