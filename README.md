@@ -57,6 +57,7 @@ JWT 적용 후에는 URL에서 `userId`를 제거하고, 토큰에서 현재 사
 7. Authentication 객체 생성
 8. SecurityContext에 인증 정보 저장
 9. Spring Security가 인증/인가 여부 판단
+```
 
 ## 향후 개선 사항
 - 응답 DTO 분리로 Entity 직접 반환 제거
