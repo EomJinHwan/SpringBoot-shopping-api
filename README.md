@@ -1,7 +1,7 @@
-Spring Security와 JWT를 적용하여 토큰 기반 인증 기능을 구현
+## Role 기반 권한 처리 및 API URL 정리
 
-- 로그인 성공 시 JWT 액세스 토큰 생성
-- 회원가입, 로그인 API는 토큰 없이 접근 가능하도록 설정
-- 그 외 API는 JWT 토큰이 있어야 접근 가능하도록 설정
-- 요청 Header에 `Authorization: Bearer {accessToken}` 형식으로 토큰을 전달하면 보호된 API 접근 가능
-- 패키지 구조 변경 dto, security 추가
+JWT 이증 이후 사용자 권한을 추가하고, 권한에 따라 접근 가능한 API를 분리
+기존에 URL로 `userId`를 직접 전달하던 장바구니 API를 수정하여, 
+JWT토큰에서 인증된 사용자의 `userId`를 추출해 사용하도록 변경
+
+
